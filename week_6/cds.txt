@@ -1,0 +1,80 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+
+-- -----------------------------------------------------
+-- Table `genres`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `genres` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `genre` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `cds`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cds` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `genre_id` INT UNSIGNED NOT NULL ,
+  `title` VARCHAR(50) NOT NULL ,
+  `price` FLOAT UNSIGNED NOT NULL DEFAULT 1.00 ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_cds_genres` (`genre_id` ASC) ,
+  CONSTRAINT `fk_cds_genres`
+    FOREIGN KEY (`genre_id` )
+    REFERENCES `genres` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `artists`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `artists` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `artist` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `artists_has_cds`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `artists_has_cds` (
+  `artist_id` INT UNSIGNED NOT NULL ,
+  `cd_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`artist_id`, `cd_id`) ,
+  INDEX `fk_artists_has_cds_cds1` (`cd_id` ASC) ,
+  INDEX `fk_artists_has_cds_artists1` (`artist_id` ASC) ,
+  CONSTRAINT `fk_artists_has_cds_artists1`
+    FOREIGN KEY (`artist_id` )
+    REFERENCES `artists` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_artists_has_cds_cds1`
+    FOREIGN KEY (`cd_id` )
+    REFERENCES `cds` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `genres`
+-- -----------------------------------------------------
+START TRANSACTION;
+INSERT INTO `genres` (`id`, `genre`) VALUES (NULL, 'Rock');
+INSERT INTO `genres` (`id`, `genre`) VALUES (NULL, 'Alteranative');
+INSERT INTO `genres` (`id`, `genre`) VALUES (NULL, 'Country');
+INSERT INTO `genres` (`id`, `genre`) VALUES (NULL, 'Contemporary');
+
+COMMIT;
