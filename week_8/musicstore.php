@@ -18,6 +18,14 @@ abstract class MusicStore extends Database
 	
 	public function save()
 	{
-		//polymorphosize this function
+		if(isset($this->data->id))
+		{
+			//update the information
+		}
+		else
+		{
+			$this->insert($this->table, $this->data);
+			$this->data = $this->getItem("SELECT * FROM `$this->table` ORDER BY `id` DESC LIMIT 1;");
+		}
 	}
 }
