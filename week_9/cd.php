@@ -8,6 +8,10 @@ class CD extends MusicStore
 	protected $table = "cds";
 	private $artistIds = array();
 	
+	/**
+	 * Gets all the CDs in the database and returns as an array of CD instances
+	 * @return Array	an array of CD instances
+	 */
 	public static function getCDs()
 	{
 		$db = new Database();
@@ -20,6 +24,11 @@ class CD extends MusicStore
 		return $cds;
 	}
 	
+	/**
+	 * Adds the provided artist to the cd instance
+	 * $param	artist	Int/Artist	the id or Artist instace of the artist
+	 * @return  void
+	 */
 	public function addArtist($artist)
 	{
 		$id = 0;
@@ -112,6 +121,10 @@ class CD extends MusicStore
 		}
 	}
 	
+	/**
+	 * Overrides the save function to specially handle artist items
+	 * @return	void
+	 */
 	public function save()
 	{
 		parent::save();

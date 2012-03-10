@@ -27,11 +27,15 @@ class Database
        self::$numConnections++;
 	}
 	
-	protected function stopError($msg)
+	protected static function stopError($msg)
 	{
-		if(self::SHOW_ERRORS)
+		if(self::HALT_ON_ERROR)
 		{
 			die("<pre>".print_r($msg, true)."</pre>");
+		}
+		else
+		{
+			self::preOut($msg);
 		}
 	}
 	
@@ -43,6 +47,11 @@ class Database
 		}
 	}
 	
+	/**
+	 * Runs a query. Outputs error if there is one.
+	 * @param	query	String	the query to call
+	 * @return	Result	the query result
+	*/
 	public function sqlCall($query)
 	{
 		$result = $this->mli->query($query);
@@ -54,7 +63,7 @@ class Database
 		if($this->mli->errno)
 		{
             $error = "Query Error: ".$this->mli->error." \r\n $query";
-            self::HALT_ON_ERROR ?  self::stopError($error):self::preOut($error);
+            self::stopError($error);
 			return NULL;
 		}
 		else
@@ -68,6 +77,11 @@ class Database
 		return filter_var($str, FILTER_SANITIZE_STRING);
 	}
 	
+	/**
+	 * Returns the data from the query as an array of objects.
+	 * @param	query	String	the query to run
+	 * @return	Array	the results of the query
+	 */
 	public function getArray($query)
 	{
 		$ret = array();
@@ -80,6 +94,12 @@ class Database
 		return $ret;
 	}
 	
+	/**
+	 * Returns the first result of the query as an object of data
+	 * Best used when only one result is expected.
+	 * @param	query	String	the query to run
+	 * @retrun	Object	the first result of the query
+	 */
 	public function getItem($query)
 	{
 		$res = $this->sqlCall($query);
@@ -88,6 +108,16 @@ class Database
 		return $data;
 	}
 	
+	/**
+	 * Inserts the provided data into the table provided.
+	 * The data object/associative array must not contain fields
+	 * that do not exist in the table.
+	 * @param	table	String	name of the table to insert into
+	 * @param	data	Object	object containing the fields and data you want to insert
+	 * @param	sanitize	Boolean	if true, data will be sanitized. 
+	 *             					Will leave data alone if false.
+	 * @return void
+	 */
 	public function insert($table, $data, $sanitize = true)
 	{
 		$keys = '';

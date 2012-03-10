@@ -6,11 +6,10 @@ class Genre extends MusicStore
 {
 	protected $table = "genres";
 	
-	/*public function dump()
-	{
-		$this->preOut($this->data);
-	}*/
-	
+	/**
+	 * Gets all the Genres in the database and returns as an array of Genre instances
+	 * @return Array	an array of Genre instances
+	 */
 	public static function getGenres()
 	{
 		$db = new Database();

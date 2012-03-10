@@ -5,6 +5,10 @@ class Artist extends MusicStore
 {
 	protected $table = "artists";
 	
+	/**
+	 * Gets all the Artistss in the database and returns as an array of Artist instances
+	 * @return Array	an array of Artist instances
+	 */
 	public static function getArtists()
 	{
 		$db = new Database();
